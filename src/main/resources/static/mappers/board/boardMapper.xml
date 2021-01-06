@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="kr.ac.inhatc.mvc.mapper.BoardMapper">
+
+	<select id="getName" resultType="String">
+		select member from test
+	</select>
+   
+	<select id="selectSubjectList" parameterType="String" resultType="hashmap">
+		select id, subject, grade, description, use_yn, reg_user
+		from `test`.`sample`
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="searchCondition=='subject' and searchKeyword != null and searchKeyword != ''">
+				and `test`.`sample`.subject like concat('%', #{searchKeyword} ,'%')
+			</if>
+			<if test="searchCondition=='userId' and searchKeyword != null and searchKeyword != ''">
+				and `test`.`sample`.reg_user like concat('%', #{searchKeyword} ,'%')
+			</if>
+		</trim>
+		limit #{startList}, #{listSize}
+	</select>
+
+	<select id="selectSubjectOne" parameterType="String" resultType="hashmap">
+		SELECT id, subject, grade, description, use_yn, reg_user
+		FROM `test`.`sample`
+		WHERE `test`.`sample`.id=#{value}
+	</select>
+   
+	<insert id="registSubject">
+		insert into `test`.`sample`
+		(subject, grade, use_yn, description, reg_user)
+		values
+		(#{subject}, #{grade}, #{useYn}, #{description}, #{regUser})
+	</insert>
+	
+	<update id="modifyBoardDetail" parameterType="Map">
+		update `test`.`sample`
+		set subject = #{subject},
+			grade = #{grade},
+			use_yn = #{useYn},
+			description = #{description},
+			reg_user = #{regUser}
+		where `test`.`sample`.id = #{id}
+	</update>
+	
+	<delete id="deleteBoardDetail" parameterType="String">
+		delete from `test`.`sample`
+		where `test`.`sample`.id = #{value}
+	</delete>
+	
+	<select id="getBoardListCnt" parameterType="String" resultType="java.lang.Integer">
+		select count(*) as boardCnt from `test`.`sample`
+			<trim prefix="where" prefixOverrides="and|or">
+				<if test="searchCondition=='subject' and searchKeyword != null and searchKeyword != ''">
+					and `test`.`sample`.subject like concat('%', #{searchKeyword} ,'%')
+				</if>
+				<if test="searchCondition=='userId' and searchKeyword != null and searchKeyword != ''">
+					and `test`.`sample`.reg_user like concat('%', #{searchKeyword} ,'%')
+				</if>
+			</trim>
+	</select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ac.inhatc.mvc.mapper.ShopMapper">
+	<!-- 로그인 -->
+	<select id="checkLogin" resultType="kr.ac.inhatc.mvc.dto.MemberDto">
+		select *, count(*) as cnt
+		from `test`.`shop_member`
+		where id=#{id}
+		and passwd=#{passwd}
+	</select>
+	
+	<select id="getOverlapId" resultType="java.lang.Integer">
+		select count(id)
+		from `test`.`shop_member`
+		where id = #{id}
+	</select>
+	
+	<insert id="addUser">
+		insert into `test`.`shop_member`
+		values (#{id}, #{passwd}, #{name}, #{gender}, #{birth}, #{mail}, #{phone}, #{address}, now())
+	</insert>
+</mapper>
